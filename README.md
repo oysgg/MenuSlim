@@ -1,4 +1,4 @@
-# 菜单栏间距 1.1（效果验证中）
+# 菜单栏间距 1.1.1（效果验证中）
 
 中文原生 Swift / SwiftUI 工具，Apple Silicon，无第三方依赖。带阻尼刻度条、0–40 pt 数字刻度、整数吸附、方向键与步进微调、预设和恢复原设置。关闭窗口即退出。
 
@@ -17,7 +17,7 @@
 | 0–15 | 选择值 | max(2, min(选择值 - 2, 10)) |
 | 16–40 | 选择值 | 删除该覆盖项 |
 
-通过本机参考软件 1.2.2 的二进制控制流和 4、12、24 档实际偏好设置读回核对了规则。应用/恢复后只向当前用户的 com.apple.controlcenter 和 com.apple.systemuiserver 发送 SIGTERM，由系统重新启动。菜单栏会短暂刷新，可能影响正在进行的屏幕共享；不刷新 MenuBarAgent。「重启所有 App」是独立的用户确认操作，列出实际候选应用；跳过本工具、Finder、系统服务和应用内部登录辅助程序。应用退出后从 Launch Services 注册的路径重新打开，无法退出或打开的项目显示在结果中。
+通过本机参考软件 1.2.2 的二进制控制流和 4、12、24 档实际偏好设置读回核对了规则。应用/恢复后只向当前用户的 com.apple.controlcenter、com.apple.systemuiserver 和已在运行的 com.apple.TextInputMenuAgent 发送 SIGTERM，由系统重新启动。菜单栏会短暂刷新，可能影响正在进行的屏幕共享；不刷新 MenuBarAgent。「重启所有 App」是独立的用户确认操作，列出实际候选应用；跳过本工具、Finder、系统服务和应用内部登录辅助程序。应用退出后从 Launch Services 注册的路径重新打开，无法退出或打开的项目显示在结果中。
 
 首次应用前将原始两个设置备份到 ~/Library/Application Support/com.yangshuai.MenuSpacing/original.plist。后续不会覆盖备份。「恢复使用前设置」精确恢复数值或原先未设置的状态。未修改 SIP、权限或开机启动项。
 
@@ -32,3 +32,5 @@ zsh build.sh /absolute/output/directory
 ```
 
 产物本地 ad-hoc 签名，未做 Apple 公证。代码独立编写，参考软件仅用于行为对照，不包含其二进制或源代码。
+
+1.1.1：单独重启 TextInputMenuAgent 后，用户确认微信输入法间距缩小，因此将其加入应用/恢复的刷新范围。天气菜单需通过系统设置中的天气开关重新加载，效果仍待确认，未加入自动刷新。

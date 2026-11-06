@@ -68,9 +68,10 @@ struct SpacingStore {
 
     func refreshSystemItems() -> Bool {
         var succeeded = true
-        for bundle in ["com.apple.controlcenter", "com.apple.systemuiserver"] {
+        for bundle in ["com.apple.controlcenter", "com.apple.systemuiserver", "com.apple.TextInputMenuAgent"] {
             let apps = NSRunningApplication.runningApplications(withBundleIdentifier: bundle)
-            if apps.isEmpty { succeeded = false }
+            // Input-menu agent is optional if the input menu is not enabled.
+            if apps.isEmpty && bundle != "com.apple.TextInputMenuAgent" { succeeded = false }
             for app in apps where kill(app.processIdentifier, SIGTERM) != 0 { succeeded = false }
         }
         return succeeded
