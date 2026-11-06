@@ -1,3 +1,4 @@
+import AppKit
 import Foundation
 
 struct SpacingState: Codable, Equatable {
@@ -9,7 +10,7 @@ enum SpacingError: LocalizedError {
     case invalidValue, unsupportedPreference, writeFailed, noBackup
     var errorDescription: String? {
         switch self {
-        case .invalidValue: return "间距需要在 1–28 pt 之间。"
+        case .invalidValue: return "间距需要在 0–40 pt 之间。"
         case .unsupportedPreference: return "当前间距设置的格式无法识别，未修改系统设置。"
         case .writeFailed: return "系统设置写入或核对失败，请重试。"
         case .noBackup: return "还没有原设置备份。首次应用时会自动保存。"
@@ -51,7 +52,7 @@ struct SpacingStore {
     }
 
     func apply(_ value: Int) throws {
-        guard (1...28).contains(value) else { throw SpacingError.invalidValue }
+        guard (0...40).contains(value) else { throw SpacingError.invalidValue }
         let before = try read()
         if !FileManager.default.fileExists(atPath: backupURL.path) {
             try FileManager.default.createDirectory(at: backupURL.deletingLastPathComponent(), withIntermediateDirectories: true)
@@ -59,8 +60,20 @@ struct SpacingStore {
         } else {
             _ = try backup() // Never overwrite a backup we cannot read.
         }
-        do { try write(SpacingState(spacing: value, padding: max(6, min(value, 16)))) }
+        // Match Menu Bar Spacing 1.2.2; >= 16 removes the padding override.
+        let padding = value < 16 ? max(2, min(value - 2, 10)) : nil
+        do { try write(SpacingState(spacing: value, padding: padding)) }
         catch { try? write(before); throw error }
+    }
+
+    func refreshSystemItems() -> Bool {
+        var succeeded = true
+        for bundle in ["com.apple.controlcenter", "com.apple.systemuiserver"] {
+            let apps = NSRunningApplication.runningApplications(withBundleIdentifier: bundle)
+            if apps.isEmpty { succeeded = false }
+            for app in apps where kill(app.processIdentifier, SIGTERM) != 0 { succeeded = false }
+        }
+        return succeeded
     }
 
     func restore() throws {

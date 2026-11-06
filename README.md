@@ -1,31 +1,34 @@
-# 菜单栏间距（未完成的实验版）
+# 菜单栏间距 1.1（效果验证中）
 
-**未达到“包括时钟、控制中心在内一起调整”的需求。** macOS 27.0.1 上实际保存设置和刷新 MenuBarAgent 后，用户反馈系统菜单栏没有变化。不能将此程序视为完整交付。已删除无效的菜单栏进程刷新操作及系统图标会生效的提示。
+中文原生 Swift / SwiftUI 工具，Apple Silicon，无第三方依赖。带阻尼刻度条、0–40 pt 数字刻度、整数吸附、方向键与步进微调、预设和恢复原设置。关闭窗口即退出。
 
-此路线仅可能影响重新启动后的普通 AppKit 应用。系统图标不跟随这两个键；本机第三方应用的视觉效果尚未验证。参考 [独立工具的测量和限制](https://github.com/nlink-jp/menubar-spacer#limits)。
+## 当前边界
 
-为当前 Mac 制作的免费、无第三方依赖的小工具。原生 Swift / SwiftUI，Apple Silicon。
+目标包含时钟和控制中心。初版写入后，用户反馈系统图标没有变化，未达到需求。1.1 已对照本机安装的 Menu Bar Spacing 1.2.2 修正内边距计算和系统服务刷新目标；用户反馈原版在点击 Relaunch All Apps 后才出现变化。因此 1.1 增加相同的一键重启普通应用入口；新版完整重启后的效果仍待用户操作确认，不以设置写入或进程刷新宣称验收。
 
-- 带弹簧阻尼动画的刻度滑条；1–28 pt，每一档显示数字，松手吸附整数。
-- 支持方向键、步进按钮、预设和辅助功能调整。
-- 预览不修改系统；点击「保存第三方图标设置」才保存设置，不重启任何进程。
-- 「恢复使用前设置」恢复首次应用之前的两个设置，包括原来不存在的键。
-- 关闭窗口即退出，无开机自启或后台常驻。
+数字代表系统偏好设置值（逻辑点），不保证每两个图标的可见边缘距离相等。普通应用需重新打开读取新值；可点击「重启所有 App」请求普通应用正常退出再打开；不会强制结束拒绝退出或等待保存的应用。
 
-数字是系统偏好设置值（逻辑点），不是承诺所有图标可见边缘之间都有相同像素距离。第三方应用通常需要重新打开才能读取新间距，本工具不会批量重启其他应用。
+## 实现
+
+只读写当前用户、当前主机的全局设置：
+
+| 选择值 | NSStatusItemSpacing | NSStatusItemSelectionPadding |
+| --- | --- | --- |
+| 0–15 | 选择值 | max(2, min(选择值 - 2, 10)) |
+| 16–40 | 选择值 | 删除该覆盖项 |
+
+通过本机参考软件 1.2.2 的二进制控制流和 4、12、24 档实际偏好设置读回核对了规则。应用/恢复后只向当前用户的 com.apple.controlcenter 和 com.apple.systemuiserver 发送 SIGTERM，由系统重新启动。菜单栏会短暂刷新，可能影响正在进行的屏幕共享；不刷新 MenuBarAgent。「重启所有 App」是独立的用户确认操作，列出实际候选应用；跳过本工具、Finder、系统服务和应用内部登录辅助程序。应用退出后从 Launch Services 注册的路径重新打开，无法退出或打开的项目显示在结果中。
+
+首次应用前将原始两个设置备份到 ~/Library/Application Support/com.yangshuai.MenuSpacing/original.plist。后续不会覆盖备份。「恢复使用前设置」精确恢复数值或原先未设置的状态。未修改 SIP、权限或开机启动项。
+
+macOS 未公开保证这些设置，升级系统后可能改变行为。原版作者的[兼容性说明](https://sindresorhus.com/menu-bar-spacing)与部分其他工具的说明存在差异，不能替代本机效果验证。
 
 ## 构建
 
-使用已安装的 Apple Command Line Tools，不下载或安装依赖：
+使用现有 Apple Command Line Tools：
 
 ```sh
 zsh build.sh /absolute/output/directory
 ```
 
-产物为本地 ad-hoc 签名，未做 Apple 公证；目标为本机使用。
-
-## 实现和恢复
-
-读写当前用户、当前主机全局偏好中的 `NSStatusItemSpacing` 和 `NSStatusItemSelectionPadding`。首次应用前将两个值备份到 `~/Library/Application Support/com.yangshuai.MenuSpacing/original.plist`，后续应用不会覆盖备份。
-
-这是未公开保证的 macOS 设置，后续系统更新可能改变效果。初始实现路线参考 [Dimble 的公开源码说明](https://github.com/fif7y/dimble/blob/main/Pelmet/App/IconSpacingApplier.swift)，但其系统图标会生效的说明与本机实测不符。本项目代码独立编写。
+产物本地 ad-hoc 签名，未做 Apple 公证。代码独立编写，参考软件仅用于行为对照，不包含其二进制或源代码。
