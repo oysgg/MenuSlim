@@ -19,7 +19,7 @@ A small native SwiftUI utility for menu bar spacing: a damped 0–40 pt slider, 
 
 ## Use
 
-Open `MenuSlim.app`, choose a value and apply. If a regular app has not picked up the setting, save your work and choose **More → Relaunch apps**. Apps that quit after the timeout must be reopened manually.
+Open `MenuSlim.app`, choose a value and apply. If a regular app has not picked up the setting, save your work and click **Relaunch apps** next to **Apply spacing**. Apps that quit after the timeout must be reopened manually.
 
 **More → Measure results** requires Accessibility access; spacing adjustment does not. Access is never enabled automatically. Measurements describe item bounds, not the transparent padding inside an icon. The slider represents a system preference value, not the exact visible gap between every pair of icons.
 

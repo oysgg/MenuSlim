@@ -220,6 +220,8 @@ struct SettingsView: View {
                         .labelsHidden().fixedSize().help(L("每次调整 1 pt"))
                 }.controlSize(.small)
             }.disabled(model.busy)
+            Text(L("部分图标需重启 App 后生效。"))
+                .font(.system(size: 11)).foregroundStyle(.secondary)
             if !model.message.isEmpty {
                 Text(model.message).font(.system(size: 11)).foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -234,10 +236,11 @@ struct SettingsView: View {
                     Button(L("查看上次检测结果")) { model.presentedReport = model.auditReport }.disabled(
                         model.auditReport == nil)
                     Divider()
-                    Button(L("重启所有 App…")) { model.prepareRelaunch() }
                     Button(L("兼容性说明")) { model.presentedReport = L("compatibility.details") }
                 }.fixedSize().menuStyle(.borderlessButton).disabled(model.busy)
                 Spacer()
+                Button(L("重启 App…")) { model.prepareRelaunch() }
+                    .controlSize(.large).disabled(model.busy)
                 Button(model.busy ? L("正在刷新…") : L("应用间距")) { model.apply() }
                     .buttonStyle(.borderedProminent).controlSize(.large)
                     .keyboardShortcut(.defaultAction).disabled(model.busy)

@@ -71,7 +71,8 @@
 "退出并重新打开" = "Quit and reopen";
 "退出菜单栏间距" = "Quit MenuSlim";
 "适中 8" = "Balanced 8";
-"重启所有 App…" = "Relaunch apps…";
+"部分图标需重启 App 后生效。" = "Some icons need an app relaunch to update.";
+"重启 App…" = "Relaunch apps…";
 "重启所有 App？" = "Relaunch apps?";
 "间距需要在 0–40 pt 之间。" = "Spacing must be between 0 and 40 pt.";
 "音频和视频控制" = "Audio & Video Controls";
