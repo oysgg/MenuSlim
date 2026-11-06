@@ -8,6 +8,10 @@ Compatible with **macOS 27** · English / 简体中文 · Apple Silicon · MIT
 
 [简体中文](README.md) · [Compatibility results](docs/COMPATIBILITY.md)
 
+**[⬇ Download MenuSlim 1.0.0 for Apple Silicon](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.zip)** · [All releases](https://github.com/oysgg/MenuSlim/releases)
+
+Unzip the download and move `MenuSlim.app` to Applications. No compilation required. For Apple Silicon Macs; tested on macOS 27.0.1. This build is ad-hoc signed and has not been notarized by Apple.
+
 A small native SwiftUI utility for menu bar spacing: a damped 0–40 pt slider, exact numeric ticks, presets, keyboard adjustment and restoration of your original settings. No third-party dependencies, networking or uploads.
 
 - Refreshes known system components, including enabled Weather and input menu items.

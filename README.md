@@ -8,6 +8,10 @@
 
 [English](README.en.md) · [兼容性实测](docs/COMPATIBILITY.md)
 
+**[⬇ 下载 MenuSlim 1.0.0（Apple Silicon）](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.zip)** · [所有发布版本](https://github.com/oysgg/MenuSlim/releases)
+
+下载 ZIP 后解压，将 `MenuSlim.app` 拖入「应用程序」即可使用，无需自行编译。适用于 M 系列 Mac，已在 macOS 27.0.1 验证；本构建为本地签名，尚未经过 Apple 公证。
+
 菜单栏（也常称状态栏）图标之间留白太大，想让它们靠近一点？菜单栏瘦身提供带数字刻度的间距滑条，支持微调、预设和恢复原设置。SwiftUI 原生界面，无第三方依赖，不联网、不上传数据。
 
 - **0–40 pt 调节**：阻尼滑条、整数吸附、键盘微调。
