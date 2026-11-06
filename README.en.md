@@ -8,11 +8,11 @@ Compatible with **macOS 27** · English / 简体中文 · Apple Silicon · MIT
 
 [简体中文](README.md) · [Compatibility results](docs/COMPATIBILITY.md)
 
-**[⬇ Download MenuSlim 1.0.0 for Apple Silicon (DMG)](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.pkg)** · [All releases](https://github.com/oysgg/MenuSlim/releases)
+**[⬇ Download MenuSlim 1.0.0 for Apple Silicon (DMG)](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0-build2/MenuSlim-1.0.0-macOS-arm64.pkg)** · [All releases](https://github.com/oysgg/MenuSlim/releases)
 
 Double-click the PKG and follow the macOS Installer steps. Then open MenuSlim from Applications. An administrator password may be required. For Apple Silicon, tested on macOS 27.0.1; the package has not been notarized by Apple.
 
-Prefer drag-to-install? Use the [DMG](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.dmg) and drag the app onto Applications as indicated by the arrow. Opening the DMG or its app does not copy it automatically.
+Prefer drag-to-install? Use the [DMG](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0-build2/MenuSlim-1.0.0-macOS-arm64.dmg) and drag the app onto Applications as indicated by the arrow. Opening the DMG or its app does not copy it automatically.
 
 A small native SwiftUI utility for menu bar spacing: a damped 0–40 pt slider, exact numeric ticks, presets, keyboard adjustment and restoration of your original settings. No third-party dependencies, networking or uploads.
 
@@ -31,7 +31,9 @@ Recorded from the app window while switching between 8, 16 and 4 pt presets. Thi
 
 ## Use
 
-Open `MenuSlim.app`, choose a value and apply. If a regular app has not picked up the setting, save your work and click **Relaunch apps** next to **Apply spacing**. Apps that quit after the timeout must be reopened manually.
+**Apply & relaunch** saves the spacing shown in the confirmation before asking apps to quit. A write failure aborts the relaunch. Only reopened apps with a different process ID count as successfully relaunched.
+
+Open `MenuSlim.app`, choose a value and apply. If a regular app has not picked up the setting, save your work and click **Apply & relaunch** next to **Apply spacing**. Apps that quit after the timeout must be reopened manually.
 
 **More → Measure results** requires Accessibility access; spacing adjustment does not. Access is never enabled automatically. Measurements describe item bounds, not the transparent padding inside an icon. The slider represents a system preference value, not the exact visible gap between every pair of icons.
 

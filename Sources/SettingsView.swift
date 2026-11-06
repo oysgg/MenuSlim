@@ -15,6 +15,7 @@ import SwiftUI
     var auditReport: String?
     var auditBaseline: [MenuBarMeasurement]?
     var pendingRelaunch: [AppRelauncher.Candidate] = []
+    var pendingSpacing = 8
     let store = SpacingStore()
 
     init() { reload(setSlider: true) }
@@ -79,6 +80,7 @@ import SwiftUI
         }
     }
     func prepareRelaunch() {
+        pendingSpacing = Int(value.rounded())
         pendingRelaunch = AppRelauncher.candidates()
         if pendingRelaunch.isEmpty {
             error = L("没有可重新打开的普通应用。")
@@ -89,9 +91,21 @@ import SwiftUI
     func relaunchApps() {
         busy = true
         Task { @MainActor in
-            relaunchResult = await AppRelauncher.run(pendingRelaunch) { self.message = $0 }
-            try? await Task.sleep(nanoseconds: 3_000_000_000)
-            measure()
+            do {
+                auditBaseline = try? MenuBarAudit.capture()
+                // Confirmed value must be persisted before any app is asked to quit.
+                try store.apply(pendingSpacing)
+                reload()
+                let warnings = await store.refreshSystemItems()
+                relaunchResult = await AppRelauncher.run(pendingRelaunch) { self.message = $0 }
+                if !warnings.isEmpty {
+                    relaunchResult = (relaunchResult ?? "") + "\n\n" + warnings.joined(separator: "\n")
+                }
+                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                measure()
+            } catch {
+                self.error = error.localizedDescription
+            }
             busy = false
         }
     }
@@ -239,7 +253,7 @@ struct SettingsView: View {
                     Button(L("兼容性说明")) { model.presentedReport = L("compatibility.details") }
                 }.fixedSize().menuStyle(.borderlessButton).disabled(model.busy)
                 Spacer()
-                Button(L("重启 App…")) { model.prepareRelaunch() }
+                Button(L("应用并重启 App…")) { model.prepareRelaunch() }
                     .controlSize(.large).disabled(model.busy)
                 Button(model.busy ? L("正在刷新…") : L("应用间距")) { model.apply() }
                     .buttonStyle(.borderedProminent).controlSize(.large)
@@ -278,8 +292,9 @@ struct SettingsView: View {
         } message: {
             Text(
                 L(
-                    "将请求 %ld 个应用正常退出并重新打开，包括浏览器和工作应用。请先保存内容；遇到保存提示请自行处理，不会强制退出。\n\n%@",
-                    model.pendingRelaunch.count, model.pendingRelaunch.map(\.name).joined(separator: ", ")))
+                    "将应用 %ld pt 间距，并请求 %ld 个应用正常退出后重新打开。请先保存工作；不会强制退出。\n\n%@",
+                    model.pendingSpacing, model.pendingRelaunch.count,
+                    model.pendingRelaunch.map(\.name).joined(separator: ", ")))
         }
         .alert(
             L("应用重启结果"),

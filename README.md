@@ -8,16 +8,16 @@
 
 [English](README.en.md) · [兼容性实测](docs/COMPATIBILITY.md)
 
-**[⬇ 下载 MenuSlim 1.0.0（PKG · Apple Silicon）](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.pkg)** · [所有发布版本](https://github.com/oysgg/MenuSlim/releases)
+**[⬇ 下载 MenuSlim 1.0.0（PKG · Apple Silicon）](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0-build2/MenuSlim-1.0.0-macOS-arm64.pkg)** · [所有发布版本](https://github.com/oysgg/MenuSlim/releases)
 
 推荐双击 PKG，跟随 macOS 安装向导完成安装，再到「应用程序」打开「菜单栏瘦身」。安装时系统可能要求管理员密码。适用于 M 系列 Mac，已在 macOS 27.0.1 验证；安装包尚未经过 Apple 公证。
 
-习惯拖拽安装也可下载 [DMG](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.dmg)，打开后按箭头将应用拖到 Applications。双击 DMG 或里面的 `.app` 只会打开，不会自动完成拷贝。
+习惯拖拽安装也可下载 [DMG](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0-build2/MenuSlim-1.0.0-macOS-arm64.dmg)，打开后按箭头将应用拖到 Applications。双击 DMG 或里面的 `.app` 只会打开，不会自动完成拷贝。
 
 菜单栏（也常称状态栏）图标之间留白太大，想让它们靠近一点？菜单栏瘦身提供带数字刻度的间距滑条，支持微调、预设和恢复原设置。SwiftUI 原生界面，无第三方依赖，不联网、不上传数据。
 
 - **0–40 pt 调节**：阻尼滑条、整数吸附、键盘微调。
-- **刷新菜单项**：处理天气、输入菜单等独立组件；可单独选择重启普通 App。
+- **刷新菜单项**：处理天气、输入菜单等独立组件；可一次确认应用间距并重启普通 App。
 - **自动对比**：读取前后实际占位，区分有变化、未变化与无法比较。
 - **中英双语**：默认跟随系统，也可在界面即时切换。
 
@@ -31,8 +31,10 @@
 
 ## 使用
 
+「应用并重启 App」会先保存确认框中的间距，再请求应用退出；保存失败则不重启。已正常退出且核对到新进程的应用才计为重启成功。
+
 1. 打开 `MenuSlim.app`，选择间距，点击「应用间距」。
-2. 普通应用未变化时，可保存工作后点击主界面的「重启 App」。不会强制退出；超时后才退出的应用需手动重新打开。
+2. 普通应用未变化时，可保存工作后点击主界面的「应用并重启 App」。不会强制退出；超时后才退出的应用需手动重新打开。
 3. 「更多 → 检测实际效果」需要辅助功能权限。未授权仍可调整间距；软件不会自动开启权限。
 4. 「更多 → 恢复使用前设置」恢复首次应用前的两项设置。
 

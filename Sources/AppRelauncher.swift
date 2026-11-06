@@ -26,8 +26,10 @@ import AppKit
                 NSWorkspace.shared.urlForApplication(withBundleIdentifier: $0)
             }
             let url =
-                registeredURL.flatMap { FileManager.default.fileExists(atPath: $0.path) ? $0 : nil }
-                ?? currentURL
+                path.contains("/AppTranslocation/")
+                ? (registeredURL.flatMap { FileManager.default.fileExists(atPath: $0.path) ? $0 : nil }
+                    ?? currentURL)
+                : currentURL
             return Candidate(
                 app: app, url: url,
                 name: app.localizedName ?? currentURL.deletingPathExtension().lastPathComponent)
@@ -65,7 +67,10 @@ import AppKit
                     NSWorkspace.shared.openApplication(at: target.url, configuration: configuration) {
                         app, error in
                         continuation.resume(
-                            returning: error?.localizedDescription ?? (app == nil ? L("未能确认应用启动") : nil))
+                            returning: error?.localizedDescription
+                                ?? (app == nil || app!.isTerminated
+                                    || app!.processIdentifier == target.app.processIdentifier
+                                    ? L("未能确认新的应用进程，未计为重启成功") : nil))
                     }
                 }
                 if let failure { failures.append("\(target.name)：\(failure)") } else { completed += 1 }
