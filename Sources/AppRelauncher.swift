@@ -56,7 +56,7 @@ import AppKit
                 else { completed += 1 }
             }
             if Date() >= deadline {
-                failures += pending.map { "\($0.name)：仍在运行（可能正在等待保存），未强制退出" }
+                failures += pending.map { "\($0.name)：仍在运行（可能正在等待保存）；如稍后才退出，请手动重新打开" }
                 break
             }
             if !pending.isEmpty {

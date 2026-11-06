@@ -10,6 +10,8 @@ import AppKit
     @Published var error: String?
     @Published var confirmRelaunch = false
     @Published var relaunchResult: String?
+    @Published var auditReport: String?
+    var auditBaseline: [MenuBarMeasurement]?
     var pendingRelaunch: [AppRelauncher.Candidate] = []
     let store = SpacingStore()
 
@@ -25,14 +27,36 @@ import AppKit
     func apply(restore: Bool = false) {
         guard !busy else { return }
         busy = true
+        auditBaseline = try? MenuBarAudit.capture()
+        Task { @MainActor in
         do {
             if restore { try store.restore() } else { try store.apply(Int(value.rounded())) }
-            let refreshed = store.refreshSystemItems()
+            let refreshed = await store.refreshSystemItems()
             reload(setSlider: restore)
             message = (restore ? "已恢复原设置。" : "已保存设置。") +
-                (refreshed ? "已请求刷新系统菜单栏，请检查实际变化。" : "部分系统菜单栏进程未能刷新。")
+                (refreshed.isEmpty ? "已刷新系统项目，正在测量实际效果…" : refreshed.joined(separator: "；"))
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            measure()
+            if !refreshed.isEmpty { auditReport = "刷新异常：\(refreshed.joined(separator: "；"))\n\n" + (auditReport ?? "") }
         } catch { self.error = error.localizedDescription }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) { self.busy = false }
+        busy = false
+        }
+    }
+    func measure() {
+        do {
+            let now = try MenuBarAudit.capture()
+            if let before = auditBaseline {
+                auditReport = MenuBarAudit.report(before, now)
+                let results = MenuBarAudit.compare(before, now)
+                message = "自动检测：\(results.filter { $0.status == .changed }.count) 项变化，\(results.filter { $0.status == .unchanged }.count) 项未变化，\(results.filter { $0.status == .unmeasurable }.count) 项无法比较。"
+            } else {
+                auditBaseline = now
+                auditReport = "已记录 \(now.count) 个项目。下次应用间距后自动比较，也可点击检测重新测量。"
+            }
+        } catch {
+            message = "设置操作已结束；实际效果尚未验证。"
+            auditReport = error.localizedDescription + "\n\n可在系统设置 → 隐私与安全性 → 辅助功能中自行授权本工具。权限仅用于读取菜单栏尺寸，程序不会自动请求或开启。"
+        }
     }
     func prepareRelaunch() {
         pendingRelaunch = AppRelauncher.candidates()
@@ -43,7 +67,8 @@ import AppKit
         busy = true
         Task { @MainActor in
             relaunchResult = await AppRelauncher.run(pendingRelaunch) { self.message = $0 }
-            message = "应用重启已结束，请检查菜单栏的实际间距。"
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            measure()
             busy = false
         }
     }
@@ -152,9 +177,14 @@ struct SettingsView: View {
             Divider()
             VStack(alignment: .leading, spacing: 7) {
                 Text(model.message).font(.system(size: 12)).foregroundStyle(.secondary)
-                Text("应用后若图标没有变化，点下方「重启所有 App」。")
+                Text("应用后自动比较实际占位；普通应用可用「重启所有 App」刷新。")
                     .font(.system(size: 11)).foregroundStyle(.secondary)
             }.frame(height: 38, alignment: .topLeading)
+            HStack {
+                Button("检测实际效果") { model.measure() }.disabled(model.busy)
+                Spacer()
+                Text("检测在本机完成，不上传数据").font(.system(size: 10)).foregroundStyle(.secondary)
+            }
             HStack {
                 Button("恢复使用前设置") { model.apply(restore: true) }
                     .disabled(!model.hasBackup || model.busy)
@@ -171,6 +201,13 @@ struct SettingsView: View {
             }.controlSize(.small)
         }
         .padding(28).frame(width: 580)
+        .sheet(isPresented: Binding(get: { model.auditReport != nil && model.relaunchResult == nil }, set: { if !$0 { model.auditReport = nil } })) {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("菜单栏实际效果").font(.headline)
+                ScrollView { Text(model.auditReport ?? "").font(.system(size: 12)).textSelection(.enabled).frame(maxWidth: .infinity, alignment: .leading) }
+                HStack { Spacer(); Button("关闭") { model.auditReport = nil }.keyboardShortcut(.cancelAction) }
+            }.padding(24).frame(width: 560, height: 440)
+        }
         .alert("未能完成操作", isPresented: Binding(get: { model.error != nil }, set: { if !$0 { model.error = nil } })) {
             Button("知道了") { model.error = nil }
         } message: { Text(model.error ?? "") }

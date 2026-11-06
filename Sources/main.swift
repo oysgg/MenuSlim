@@ -27,13 +27,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     }
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool { true }
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        AppRelauncher.isRunning ? .terminateCancel : .terminateNow
+        AppRelauncher.isRunning || SpacingStore.isRefreshing ? .terminateCancel : .terminateNow
     }
-    func windowShouldClose(_ sender: NSWindow) -> Bool { !AppRelauncher.isRunning }
+    func windowShouldClose(_ sender: NSWindow) -> Bool { !AppRelauncher.isRunning && !SpacingStore.isRefreshing }
     func applicationShouldHandleReopen(_ sender: NSApplication, hasVisibleWindows flag: Bool) -> Bool {
         window?.makeKeyAndOrderFront(nil)
         return true
     }
+}
+
+if CommandLine.arguments.contains("--audit") {
+    do { print(try MenuBarAudit.json()); exit(0) }
+    catch { fputs("\(error.localizedDescription)\n", stderr); exit(1) }
+}
+if CommandLine.arguments.contains("--refresh-system") {
+    Task { @MainActor in
+        let result = await SpacingStore().refreshSystemItems()
+        print(result.isEmpty ? "Refresh requested" : result.joined(separator: "\n"))
+        exit(result.isEmpty ? 0 : 1)
+    }
+    RunLoop.main.run()
 }
 
 let app = NSApplication.shared
