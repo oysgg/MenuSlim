@@ -1,0 +1,23 @@
+菜单栏瘦身 · MenuSlim 1.0.0
+
+安装（Apple Silicon / M 系列 Mac）
+
+1. 将 MenuSlim.app 拖到旁边的 Applications（应用程序）文件夹。
+2. 拷贝完成后，推出这个磁盘映像。
+3. 从 Finder 的「应用程序」中打开 MenuSlim／菜单栏瘦身。
+
+请选择安装后的副本，不要直接从磁盘映像运行。
+兼容 macOS 27；部分系统图标调整仍有限制，见项目说明。
+本构建使用本地 ad-hoc 签名，尚未经过 Apple 公证。
+
+Installation (Apple Silicon Macs)
+
+1. Drag MenuSlim.app onto the Applications folder beside it.
+2. Wait for copying to finish, then eject this disk image.
+3. Open MenuSlim from Applications in Finder.
+
+Run the installed copy rather than the copy inside this disk image.
+Compatible with macOS 27; some system items have limitations.
+This build is ad-hoc signed and has not been notarized by Apple.
+
+https://github.com/oysgg/MenuSlim
