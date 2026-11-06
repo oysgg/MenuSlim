@@ -63,9 +63,6 @@ class Preferences:
     def restore(self):
         self.write(self.before)
 
-def write(values):
-    Preferences().write(values)
-
 def audit(executable):
     result = subprocess.run([executable, '--audit'], capture_output=True, text=True, timeout=30, check=True)
     rows = json.loads(result.stdout)
