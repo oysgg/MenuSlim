@@ -8,9 +8,11 @@ Compatible with **macOS 27** · English / 简体中文 · Apple Silicon · MIT
 
 [简体中文](README.md) · [Compatibility results](docs/COMPATIBILITY.md)
 
-**[⬇ Download MenuSlim 1.0.0 for Apple Silicon (DMG)](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.dmg)** · [All releases](https://github.com/oysgg/MenuSlim/releases)
+**[⬇ Download MenuSlim 1.0.0 for Apple Silicon (DMG)](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.pkg)** · [All releases](https://github.com/oysgg/MenuSlim/releases)
 
-Open the DMG and drag `MenuSlim.app` onto the Applications folder beside it. After copying, eject the disk image and launch MenuSlim from Applications. No compilation required. For Apple Silicon Macs; tested on macOS 27.0.1. This build is ad-hoc signed and has not been notarized by Apple.
+Double-click the PKG and follow the macOS Installer steps. Then open MenuSlim from Applications. An administrator password may be required. For Apple Silicon, tested on macOS 27.0.1; the package has not been notarized by Apple.
+
+Prefer drag-to-install? Use the [DMG](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.dmg) and drag the app onto Applications as indicated by the arrow. Opening the DMG or its app does not copy it automatically.
 
 A small native SwiftUI utility for menu bar spacing: a damped 0–40 pt slider, exact numeric ticks, presets, keyboard adjustment and restoration of your original settings. No third-party dependencies, networking or uploads.
 
@@ -44,6 +46,7 @@ zsh build.sh /absolute/output/directory
 zsh Tests/run.sh
 # Package the built application as a DMG
 zsh Tools/package_dmg.sh /absolute/output/directory/MenuSlim.app /absolute/output/directory/MenuSlim-1.0.0-macOS-arm64.dmg
+zsh Tools/package_pkg.sh /absolute/output/directory/MenuSlim.app /absolute/output/directory/MenuSlim-1.0.0-macOS-arm64.pkg
 ```
 
 Produces `MenuSlim.app` and an icon PNG. Target: arm64 / macOS 14+, tested on macOS 27.0.1 only. Measurement currently supports macOS 27. Builds are ad-hoc signed and not notarized.

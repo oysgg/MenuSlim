@@ -8,9 +8,11 @@
 
 [English](README.en.md) · [兼容性实测](docs/COMPATIBILITY.md)
 
-**[⬇ 下载 MenuSlim 1.0.0（DMG · Apple Silicon）](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.dmg)** · [所有发布版本](https://github.com/oysgg/MenuSlim/releases)
+**[⬇ 下载 MenuSlim 1.0.0（PKG · Apple Silicon）](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.pkg)** · [所有发布版本](https://github.com/oysgg/MenuSlim/releases)
 
-打开下载的 DMG，将 `MenuSlim.app` 拖到旁边的「Applications（应用程序）」文件夹。拷贝完成后推出磁盘映像，从「应用程序」打开软件，无需自行编译。适用于 M 系列 Mac，已在 macOS 27.0.1 验证；本构建为本地签名，尚未经过 Apple 公证。
+推荐双击 PKG，跟随 macOS 安装向导完成安装，再到「应用程序」打开「菜单栏瘦身」。安装时系统可能要求管理员密码。适用于 M 系列 Mac，已在 macOS 27.0.1 验证；安装包尚未经过 Apple 公证。
+
+习惯拖拽安装也可下载 [DMG](https://github.com/oysgg/MenuSlim/releases/download/v1.0.0/MenuSlim-1.0.0-macOS-arm64.dmg)，打开后按箭头将应用拖到 Applications。双击 DMG 或里面的 `.app` 只会打开，不会自动完成拷贝。
 
 菜单栏（也常称状态栏）图标之间留白太大，想让它们靠近一点？菜单栏瘦身提供带数字刻度的间距滑条，支持微调、预设和恢复原设置。SwiftUI 原生界面，无第三方依赖，不联网、不上传数据。
 
@@ -45,6 +47,7 @@ zsh build.sh /absolute/output/directory
 zsh Tests/run.sh
 # 将已构建的应用打包为 DMG
 zsh Tools/package_dmg.sh /absolute/output/directory/MenuSlim.app /absolute/output/directory/MenuSlim-1.0.0-macOS-arm64.dmg
+zsh Tools/package_pkg.sh /absolute/output/directory/MenuSlim.app /absolute/output/directory/MenuSlim-1.0.0-macOS-arm64.pkg
 ```
 
 输出 `MenuSlim.app` 和图标 PNG。构建目标为 arm64 / macOS 14+，目前仅验证 macOS 27.0.1；自动检测仅适配 macOS 27。构建产物使用本地 ad-hoc 签名，尚未公证。
