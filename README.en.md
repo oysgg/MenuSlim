@@ -2,7 +2,7 @@
 
 # MenuSlim 1.0.0
 
-**Adjust icon spacing. Make room in your menu bar.**
+**A Mac menu bar / status bar icon spacing utility. Make room for your icons.**
 
 Compatible with **macOS 27** · English / 简体中文 · Apple Silicon · MIT
 
@@ -15,7 +15,13 @@ A small native SwiftUI utility for menu bar spacing: a damped 0–40 pt slider, 
 - Compares actual menu item bounds before and after applying a value.
 - Follows your system language, with an instant Chinese / English override.
 
-> **macOS 27 compatibility does not mean every system icon is adjustable.** Weather and the input menu have shown changes; Clock, Control Center and Battery did not change in current testing. See the [compatibility table](docs/COMPATIBILITY.md). 
+> **macOS 27 compatibility does not mean every system icon is adjustable.** Weather and the input menu have shown changes; Clock, Control Center and Battery did not change in current testing. See the [compatibility table](docs/COMPATIBILITY.md).
+
+## Demo
+
+![MenuSlim spacing configuration demo](Assets/configuration.gif)
+
+Recorded from the app window while switching between 8, 16 and 4 pt presets. This shows the configuration controls; Apply was not clicked and the animation does not demonstrate system icon changes. Regular apps typically need to be relaunched after applying. See the [measured compatibility results](docs/COMPATIBILITY.md) for system items.
 
 ## Use
 
